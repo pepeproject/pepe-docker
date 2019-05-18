@@ -7,10 +7,8 @@ services:
     env_file:
       - st2/conf/rabbitmq.env
       - st2/conf/stackstorm.env
-    environment:
-      - PORT=8001
     ports:
-      - "8001:8001"
+      - "8001:8080"
     depends_on:
       - rabbitmq
       - redis
@@ -20,9 +18,31 @@ services:
       - private
     volumes:
       - ./chapolin:/mnt
-      - ./jdk:/root/jdk
+      - ./jdk:/mnt/jdk
       - ./userdata/chapolin.sh:/mnt/start.sh
+      - ./stanley_rsa:/mnt/id_rsa
     command: /mnt/start.sh
+
+  api:
+    image: tuxmonteiro/ucentos:7
+    env_file:
+      - st2/conf/rabbitmq.env
+      - st2/conf/stackstorm.env
+    ports:
+      - "8000:8080"
+    depends_on:
+      - rabbitmq
+      - redis
+      - stackstorm
+    networks:
+      - public
+      - private
+    volumes:
+      - ./api:/mnt
+      - ./jdk:/mnt/jdk
+      - ./userdata/api.sh:/mnt/start.sh
+    command: /mnt/start.sh
+
 
 ### External Services
   stackstorm:
