@@ -1,0 +1,18 @@
+[submodule "st2"]
+	path = st2
+	url = https://github.com/StackStorm/st2-docker.git
+[submodule "api"]
+	path = api
+	url = https://github.com/pepeproject/pepe-api.git
+[submodule "chapolin"]
+	path = chapolin
+	url = https://github.com/pepeproject/pepe-chapolin.git
+[submodule "munin"]
+	path = munin
+	url = https://github.com/pepeproject/pepe-munin.git
+[submodule "acscollector"]
+	path = acscollector
+	url = https://github.com/pepeproject/pepe-acscollector.git
+[submodule "common"]
+	path = common
+	url = https://github.com/pepeproject/pepe-common.git
