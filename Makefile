@@ -24,13 +24,13 @@ clean: setup
 	done
 
 dist: package
-	type fpm > /dev/null 2>&1 && \
+	bundle install --deployment && \
+	bundle exec type fpm > /dev/null 2>&1 && \
   for service in ${SERVICES} ; do \
-	  cd $$service; \
-		echo "#version ${VERSION}" > target/VERSION && \
-		git show --summary >> target/VERSION && \
-		mkdir -p target/empty && \
-		fpm -s dir \
+		echo "#version ${VERSION}" > $$service/target/VERSION && \
+		cd $$service && git show --summary >> target/VERSION && cd - && \
+		mkdir -p $$service/target/empty && \
+		bundle exec fpm -s dir \
 				--rpm-rpmbuild-define '_binaries_in_noarch_packages_terminate_build 0' \
 				-t rpm \
 				-n "pepe-$$service" \
@@ -42,17 +42,16 @@ dist: package
 				--url 'https://pepeproject.github.com' \
 				--vendor 'Globo.com' \
 				--description "Pepe $$service service" \
-				--after-install rpms/postinstall \
-				--before-remove rpms/preremove \
-				--after-remove rpms/postremove \
-				-f -p ./dists/pepe-$$service-${RPM_VER}.el7.noarch.rpm \
-								rpms/pepe-profile.sh=/opt/pepe/$$service/scripts/pepe.sh \
-								rpms/pepe@.service=/usr/lib/systemd/system/pepe@.service \
-								rpms/log4j.xml=/opt/pepe/$$service/conf/log4j.xml \
-								target/VERSION=/opt/pepe/$$service/lib/VERSION \
-								target/empty/=/opt/logs/pepe/$$service \
-								target/pepe-$$service-${VERSION}-SNAPSHOT.jar=/opt/pepe/$$service/lib/pepe.jar; \
-		cd -; \
+				--after-install $$service/rpms/postinstall \
+				--before-remove $$service/rpms/preremove \
+				--after-remove $$service/rpms/postremove \
+				-f -p ./$$service/dists/pepe-$$service-${RPM_VER}-${RELEASE}.el7.noarch.rpm \
+						$$service/rpms/pepe-profile.sh=/opt/pepe/$$service/scripts/pepe.sh \
+						$$service/rpms/pepe@.service=/usr/lib/systemd/system/pepe@.service \
+						$$service/rpms/log4j.xml=/opt/pepe/$$service/conf/log4j.xml \
+						$$service/target/VERSION=/opt/pepe/$$service/lib/VERSION \
+						$$service/target/empty/=/opt/logs/pepe/$$service \
+						$$service/target/pepe-$$service-${VERSION}-SNAPSHOT.jar=/opt/pepe/$$service/lib/pepe.jar; \
   done
 
 run:
