@@ -54,7 +54,12 @@ dist: package
 						$$service/target/pepe-$$service-${VERSION}-SNAPSHOT.jar=/opt/pepe/$$service/lib/pepe.jar; \
   done
 
-run:
+stanley:
+	docker create --name tempst2 stackstorm/stackstorm:latest && \
+	docker cp tempst2:/home/stanley/.ssh/stanley_rsa . && \
+	docker rm tempst2
+
+run: stanley
 	docker-compose up -d
 
 stop:
