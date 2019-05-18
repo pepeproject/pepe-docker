@@ -7,7 +7,7 @@ echo "export RABBIT_MANAGEMENT_PASSWORD=$RABBITMQ_DEFAULT_PASS" >> /etc/profile.
 source /etc/profile.d/rabbit.sh
 
 yum install -y /mnt/jdk/java-11-amazon-corretto-devel-11.0.3.7-1.x86_64.rpm
-yum install -y /mnt/dists/pepe-chapolin-1.0.0.el7.noarch.rpm
+yum install -y /mnt/dists/pepe-chapolin-*el7.noarch.rpm
 
 
 
