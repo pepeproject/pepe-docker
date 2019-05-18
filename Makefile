@@ -63,6 +63,7 @@ run: stanley
 	docker-compose up -d
 
 stop:
+	rm -f stanley_rsa
 	docker-compose stop -t1
 	docker-compose rm -f
 
