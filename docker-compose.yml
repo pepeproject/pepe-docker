@@ -21,8 +21,8 @@ services:
     volumes:
       - ./chapolin:/mnt
       - ./jdk:/root/jdk
-      - ./chapolin-userdata.sh:/mnt/chapolin-userdata.sh
-    command: /mnt/chapolin-userdata.sh
+      - ./userdata/chapolin.sh:/mnt/start.sh
+    command: /mnt/start.sh
 
 ### External Services
   stackstorm:
