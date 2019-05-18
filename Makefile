@@ -67,3 +67,6 @@ stop:
 	docker-compose stop -t1
 	docker-compose rm -f
 
+volume-prune:
+	docker volume prune -f
+
