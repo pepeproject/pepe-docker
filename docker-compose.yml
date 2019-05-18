@@ -1,0 +1,120 @@
+version: '3'
+
+services:
+
+  chapolin:
+    image: tuxmonteiro/ucentos:7
+    env_file:
+      - st2/conf/rabbitmq.env
+      - st2/conf/stackstorm.env
+    environment:
+      - PORT=8001
+    ports:
+      - "8001:8001"
+    depends_on:
+      - rabbitmq
+      - redis
+      - stackstorm
+    networks:
+      - public
+      - private
+    volumes:
+      - ./chapolin:/mnt
+      - ./jdk:/root/jdk
+      - ./chapolin-userdata.sh:/mnt/chapolin-userdata.sh
+    command: /mnt/chapolin-userdata.sh
+
+### External Services
+  stackstorm:
+    image: stackstorm/stackstorm:${ST2_IMAGE_TAG:-latest}
+    env_file:
+      - st2/conf/stackstorm.env
+      - st2/conf/mongo.env
+      - st2/conf/rabbitmq.env
+      - st2/conf/postgres.env
+      - st2/conf/redis.env
+    ports:
+      - "8043:443"
+    depends_on:
+      - mongo
+      - postgres
+      - rabbitmq
+      - redis
+    networks:
+      - public
+      - private
+    volumes:
+      - stackstorm-packs-volume:/opt/stackstorm/packs
+      - stackstorm-virtualenvs-volume:/opt/stackstorm/virtualenvs
+      - stackstorm-configs-volume:/opt/stackstorm/configs
+      - stackstorm-log-volume:/var/log
+      - ./packs.dev:/opt/stackstorm/packs.dev
+      - ./runtime/entrypoint.d:/st2-docker/entrypoint.d
+      - ./runtime/st2.d:/st2-docker/st2.d
+      - ./st2/conf/stackstorm.env:/st2-docker/env
+    dns_search: .
+
+  mongo:
+    image: mongo:3.4
+    env_file:
+      - st2/conf/mongo.env
+    networks:
+      - private
+    volumes:
+      - mongo-volume:/data/db
+      - mongo-configdb-volume:/data/configdb
+    dns_search: .
+  rabbitmq:
+    image: rabbitmq:3.6-management
+    env_file:
+      - st2/conf/rabbitmq.env
+    networks:
+      - private
+    volumes:
+      - rabbitmq-volume:/var/lib/rabbitmq
+    dns_search: .
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+  postgres:
+    image: postgres:9.6
+    env_file:
+      - st2/conf/postgres.env
+    networks:
+      - private
+    volumes:
+      - postgres-volume:/var/lib/postgresql/data
+    dns_search: .
+  redis:
+    image: redis:4.0
+    env_file:
+      - st2/conf/redis.env
+    networks:
+      - private
+    volumes:
+      - redis-volume:/data
+    dns_search: .
+    command: [
+      "bash", "-c",
+      '
+       docker-entrypoint.sh
+       --requirepass "$$REDIS_PASSWORD"
+      '
+    ]
+
+volumes:
+  mongo-volume:
+  mongo-configdb-volume:
+  postgres-volume:
+  rabbitmq-volume:
+  redis-volume:
+  stackstorm-packs-volume:
+  stackstorm-virtualenvs-volume:
+  stackstorm-configs-volume:
+  stackstorm-log-volume:
+
+networks:
+  public:
+    driver: bridge
+  private:
+    driver: bridge
