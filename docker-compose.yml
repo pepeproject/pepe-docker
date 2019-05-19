@@ -2,6 +2,25 @@ version: '3'
 
 services:
 
+  munin:
+    image: tuxmonteiro/ucentos:7
+    env_file:
+      - st2/conf/postgres.env
+    ports:
+      - "8002:8080"
+    depends_on:
+      - postgres
+      - api
+      - keystone
+    networks:
+      - public
+      - private
+    volumes:
+      - ./munin:/mnt
+      - ./jdk:/mnt/jdk
+      - ./userdata/munin.sh:/mnt/start.sh
+    command: /mnt/start.sh
+
   chapolin:
     image: tuxmonteiro/ucentos:7
     env_file:
@@ -121,6 +140,11 @@ services:
        --requirepass "$$REDIS_PASSWORD"
       '
     ]
+  keystone:
+    image: tuxmonteiro/keystone:latest
+    networks:
+      - private
+    dns_search: .
 
 volumes:
   mongo-volume:
