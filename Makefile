@@ -20,7 +20,7 @@ test: clean
 clean: setup
 	PEPE_VERSION=${PEPE_VERSION} ./mvnw clean
 	for service in ${SERVICES} ; do \
-		rm -f dists/pepe-$$service-${RPM_VER}*.rpm; \
+		rm -vf $$service/dists/pepe-$$service-${RPM_VER}*.rpm; \
 	done
 
 dist: package
