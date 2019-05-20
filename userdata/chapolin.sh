@@ -14,8 +14,6 @@ source /etc/profile.d/rabbit.sh
 
 while ! echo > /dev/tcp/stackstorm/443; do sleep 1; done
 
-ssh -i /mnt/id_rsa -o "StrictHostKeyChecking=no" stanley@stackstorm "/usr/bin/st2ctl reload --register-all"
-
 sleep 10 # TODO: check if stackstorm is ready
 
 TOKEN="$(curl -k -s -X POST -u $ST2_USER:$ST2_PASSWORD -H'Accept: */*' -H'content-type: application/json' --data-binary '{}' https://stackstorm/auth/tokens | python -c 'import sys, json; print json.load(sys.stdin)["token"]')"
@@ -24,9 +22,11 @@ echo "export STACKSTORM_KEY=$APIKEY" > /etc/profile.d/stackstorm.sh
 echo "export STACKSTORM_URL=https://stackstorm/api/v1" >> /etc/profile.d/stackstorm.sh
 source /etc/profile.d/stackstorm.sh
 
+yum install -y openssh-clients
+ssh -i /mnt/id_rsa -o "StrictHostKeyChecking=no" stanley@stackstorm "/usr/bin/st2ctl reload --register-all"
+
 # RPM
 
-yum install -y openssh-clients
 yum install -y /mnt/jdk/*.rpm
 yum install -y /mnt/dists/pepe-${SERVICE}-*el7.noarch.rpm
 
