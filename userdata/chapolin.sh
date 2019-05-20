@@ -13,7 +13,11 @@ source /etc/profile.d/rabbit.sh
 # StackStorm
 
 while ! echo > /dev/tcp/stackstorm/443; do sleep 1; done
-sleep 5
+
+ssh -i /mnt/id_rsa -o "StrictHostKeyChecking=no" stanley@stackstorm "/usr/bin/st2ctl reload --register-all"
+
+sleep 10 # TODO: check if stackstorm is ready
+
 TOKEN="$(curl -k -s -X POST -u $ST2_USER:$ST2_PASSWORD -H'Accept: */*' -H'content-type: application/json' --data-binary '{}' https://stackstorm/auth/tokens | python -c 'import sys, json; print json.load(sys.stdin)["token"]')"
 APIKEY="$(curl -k -s -X POST -H'Accept: */*' -H'content-type: application/json' -H'X-Auth-Token: '${TOKEN}  --data-binary '{}' https://stackstorm/api/v1/apikeys | python -c 'import sys, json; print json.load(sys.stdin)["key"]')"
 echo "export STACKSTORM_KEY=$APIKEY" > /etc/profile.d/stackstorm.sh
@@ -25,10 +29,6 @@ source /etc/profile.d/stackstorm.sh
 yum install -y openssh-clients
 yum install -y /mnt/jdk/*.rpm
 yum install -y /mnt/dists/pepe-${SERVICE}-*el7.noarch.rpm
-
-# RELOAD StackStorm
-
-ssh -i /mnt/id_rsa -o "StrictHostKeyChecking=no" stanley@stackstorm "/usr/bin/st2ctl reload --register-all"
 
 # START
 
