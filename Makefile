@@ -2,7 +2,7 @@ PEPE_VERSION ?= 1.0.0
 RPM_VER=$(PEPE_VERSION)
 VERSION=${RPM_VER}
 RELEASE=$(shell date +%Y%m%d%H%M)
-SERVICES=api chapolin munin acscollector
+SERVICES=api chapolin munin
 
 setup:
 	git pull --recurse-submodules
@@ -25,6 +25,7 @@ clean: setup
 	done
 
 dist: package
+	bundle lock && \
 	bundle install --deployment && \
 	bundle exec type fpm > /dev/null 2>&1 && \
   for service in ${SERVICES} ; do \
