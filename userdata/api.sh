@@ -2,9 +2,10 @@
 
 SERVICE=api
 
-# Keystone
+# KEYSTONE
 
-echo "export SECURITY_DISABLE=true" > /etc/profile.d/keystone.sh
+echo "export KEYSTONE_URL=http://keystone:5000/v3" > /etc/profile.d/keystone.sh
+echo "export KEYSTONE_DOMAIN_CONTEXT=default" >> /etc/profile.d/keystone.sh
 source /etc/profile.d/keystone.sh
 
 # RABBITMQ
