@@ -18,10 +18,10 @@ source /etc/profile.d/pepe-api.sh
 # KEYSTONE
 
 echo "export KEYSTONE_URL=http://keystone:5000/v3" > /etc/profile.d/keystone.sh
-echo "export KEYSTONE_USER=demo" >> /etc/profile.d/keystone.sh
-echo "export KEYSTONE_PASSWORD=DEMO_PASS" >> /etc/profile.d/keystone.sh
+echo "export KEYSTONE_USER=admin" >> /etc/profile.d/keystone.sh
+echo "export KEYSTONE_PASSWORD=ADMIN_PASS" >> /etc/profile.d/keystone.sh
 echo "export KEYSTONE_DOMAIN=default" >> /etc/profile.d/keystone.sh
-echo "export KEYSTONE_PROJECT=demo" >> /etc/profile.d/keystone.sh
+echo "export KEYSTONE_PROJECT=admin" >> /etc/profile.d/keystone.sh
 source /etc/profile.d/keystone.sh
 
 # RPM
