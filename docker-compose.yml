@@ -53,6 +53,7 @@ services:
       - rabbitmq
       - redis
       - stackstorm
+      - keystone
     networks:
       - public
       - private
