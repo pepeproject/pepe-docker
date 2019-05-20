@@ -1,11 +1,12 @@
 PEPE_VERSION ?= 1.0.0
 RPM_VER=$(PEPE_VERSION)
 VERSION=${RPM_VER}
-RELEASE=$(shell date +%y%m%d%H%M)
+RELEASE=$(shell date +%Y%m%d%H%M)
 SERVICES=api chapolin munin acscollector
 
 setup:
 	git pull --recurse-submodules
+	git submodule update --remote --recursive
 	cd st2; make env; cd -
 
 common: clean
