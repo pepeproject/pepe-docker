@@ -1,2 +1,4 @@
 Gemfile.lock
 stanley_rsa
+.bundle/
+vendor/
