@@ -19,11 +19,20 @@ source /etc/profile.d/rabbit.sh
 # Stackstorm
 
 while ! echo > /dev/tcp/stackstorm/443; do sleep 1; done
-sleep 5
-TOKEN="$(curl -k -s -X POST -u $ST2_USER:$ST2_PASSWORD -H'Accept: */*' -H'content-type: application/json' --data-binary '{}' https://stackstorm/auth/tokens | python -c 'import sys, json; print json.load(sys.stdin)["token"]')"
-APIKEY="$(curl -k -s -X POST -H'Accept: */*' -H'content-type: application/json' -H'X-Auth-Token: '${TOKEN}  --data-binary '{}' https://stackstorm/api/v1/apikeys | python -c 'import sys, json; print json.load(sys.stdin)["key"]')"
+
+limit=15
+count=0
+while :; do
+    count=$[count+1]
+    TOKEN="$(curl -k -s -X POST -u $ST2_USER:$ST2_PASSWORD -H'Accept: */*' -H'content-type: application/json' --data-binary '{}' https://stackstorm/auth/tokens | python -c 'import sys, json; print json.load(sys.stdin)["token"]')"
+    APIKEY="$(curl -k -s -X POST -H'Accept: */*' -H'content-type: application/json' -H'X-Auth-Token: '${TOKEN}  --data-binary '{}' https://stackstorm/api/v1/apikeys | python -c 'import sys, json; print json.load(sys.stdin)["key"]')"
+    [ "x${APIKEYS}" != "x" ] && break || sleep 1
+    [ ${count} -ge ${limit} ] && break
+done
 echo "export STACKSTORM_KEY=$APIKEY" > /etc/profile.d/stackstorm.sh
-echo "export STACKSTORM_URL=https://stackstorm/api/v1" >> /etc/profile.d/stackstorm.sh
+echo "export STACKSTORM_API_URL=https://stackstorm" >> /etc/profile.d/stackstorm.sh
+echo "export STACKSTORM_AUTH_URL=https://stackstorm" >> /etc/profile.d/stackstorm.sh
+echo "export STACKSTORM_STREAM_URL=https://stackstorm" >> /etc/profile.d/stackstorm.sh
 source /etc/profile.d/stackstorm.sh
 
 # RPM
