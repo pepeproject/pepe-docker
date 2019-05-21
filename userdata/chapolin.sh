@@ -14,7 +14,7 @@ source /etc/profile.d/rabbit.sh
 
 while ! echo > /dev/tcp/stackstorm/443; do sleep 1; done
 
-limit=15
+limit=60 # timeout
 count=0
 while :; do
     count=$[count+1]
