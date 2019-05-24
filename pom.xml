@@ -60,6 +60,7 @@
     <module>api</module>
     <module>chapolin</module>
     <module>munin</module>
+    <module>acscollector</module>
   </modules>
 
   <organization>
