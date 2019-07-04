@@ -146,8 +146,22 @@ services:
     networks:
       - private
     dns_search: .
+  mysql:
+    image: mysql:5.6
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: pepe
+    volumes:
+      - mysql-volume:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    networks:
+      - private
+    dns_search: .
 
 volumes:
+  mysql-volume:
   mongo-volume:
   mongo-configdb-volume:
   postgres-volume:
