@@ -2,6 +2,15 @@
 
 SERVICE=api
 
+# DB
+
+echo "export DB_API_DRIVER=org.h2.Driver" > /etc/profile.d/db.sh
+echo "export DB_API_URL='jdbc:h2:mem:test;MODE=MySQL'" >> /etc/profile.d/db.sh
+echo "export DB_API_USER=pepe" >> /etc/profile.d/db.sh
+echo "export DB_API_PASSWORD=password" >> /etc/profile.d/db.sh
+echo "export DB_API_DDL=create" >> /etc/profile.d/db.sh
+source /etc/profile.d/db.sh
+
 # KEYSTONE
 
 echo "export KEYSTONE_URL=http://keystone:5000/v3" > /etc/profile.d/keystone.sh
@@ -39,6 +48,10 @@ source /etc/profile.d/stackstorm.sh
 
 yum install -y /mnt/jdk/*.rpm
 yum install -y /mnt/dists/pepe-${SERVICE}-*el7.noarch.rpm
+
+# Flyway
+export JAVA_HOME=/usr/lib/jvm/java
+cd /mnt && ./mnvw dependency:tree # TODO run Flyway
 
 # START
 

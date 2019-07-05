@@ -2,17 +2,18 @@
 
 SERVICE=munin
 
-# POSTGRES
+# DB
 
-echo "export DB_URL=jdbc:postgresql://postgres:${POSTGRES_PORT}/${POSTGRES_DB}" > /etc/profile.d/postgres.sh
-echo "export DB_USER=$POSTGRES_USER" >> /etc/profile.d/postgres.sh
-echo "export DB_PASSWORD=$POSTGRES_PASSWORD" >> /etc/profile.d/postgres.sh
-echo "export MUNIN_QUERY_WORKER='SELECT 1'" >> /etc/profile.d/postgres.sh
-source /etc/profile.d/postgres.sh
+echo "export DB_MUNIN_DRIVER=org.h2.Driver" > /etc/profile.d/db.sh
+echo "export DB_MUNIN_URL='jdbc:h2:mem:test;MODE=MySQL'" >> /etc/profile.d/db.sh
+echo "export DB_MUNIN_USER=pepe" >> /etc/profile.d/db.sh
+echo "export DB_MUNIN_PASSWORD=password" >> /etc/profile.d/db.sh
+echo "export DB_MUNIN_DDL=create" >> /etc/profile.d/db.sh
+source /etc/profile.d/db.sh
 
 # API
 
-echo "export PEPE_ENDPOINT=http://api:8080/api" > /etc/profile.d/pepe-api.sh
+echo "export PEPE_ENDPOINT=http://api:8080" > /etc/profile.d/pepe-api.sh
 source /etc/profile.d/pepe-api.sh
 
 # KEYSTONE
@@ -28,6 +29,15 @@ source /etc/profile.d/keystone.sh
 
 yum install -y /mnt/jdk/*.rpm
 yum install -y /mnt/dists/pepe-${SERVICE}-*el7.noarch.rpm
+
+# wait pepe-api 
+while ! echo > /dev/tcp/api/8080; do sleep 1; done
+
+# Add initial data
+curl -H'content-type: application/json' -d'{"name":"org.postgresql.Driver", "jar":"/tmp/postgresql-42.2.6.jar","type":"JDBC" }' ${PEPE_ENDPOINT}/munin/v1/driver
+curl -H'content-type: application/json' -d'{"name":"myconnection","url":"jdbc:postgresql://postgres:'${POSTGRES_PORT}'/'${POSTGRES_DB}'", "login":"'${POSTGRES_USER}'","password":"'${POSTGRES_PASSWORD}'", "driver":"http://localhost/driver/1" }' ${PEPE_ENDPOINT}/munin/v1/connection
+curl -H'content-type: application/json' -d'{"name": "'${KEYSTONE_PROJECT}'", "keystone":{"login":"'${KEYSTONE_USER}'", "password":"'${KEYSTONE_PASSWORD}'"}}' ${PEPE_ENDPOINT}/munin/v1/project
+curl -H'content-type: application/json' -d'{"name": "myquery", "query":"select 1", "connection":"http://localhost/connection/2", "project":"http://localhost/project/3"}' ${PEPE_ENDPOINT}/munin/v1/metric
 
 # START
 
