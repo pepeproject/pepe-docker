@@ -9,6 +9,7 @@ services:
     ports:
       - "8002:8080"
     depends_on:
+      - mysql
       - postgres
       - api
       - keystone
@@ -19,6 +20,7 @@ services:
       - ./munin:/mnt
       - ./jdk:/mnt/jdk
       - ./userdata/munin.sh:/mnt/start.sh
+      - ./drivers/postgresql-42.2.6.jar:/tmp/postgresql-42.2.6.jar
     command: /mnt/start.sh
 
   chapolin:
@@ -50,6 +52,7 @@ services:
     ports:
       - "8000:8080"
     depends_on:
+      - mysql
       - rabbitmq
       - redis
       - stackstorm
@@ -61,6 +64,7 @@ services:
       - ./api:/mnt
       - ./jdk:/mnt/jdk
       - ./userdata/api.sh:/mnt/start.sh
+      - ~/:/root
     command: /mnt/start.sh
 
 
