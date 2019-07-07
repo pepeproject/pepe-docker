@@ -4,11 +4,12 @@ SERVICE=munin
 
 # DB
 
-echo "export DB_MUNIN_DRIVER=org.h2.Driver" > /etc/profile.d/db.sh
-echo "export DB_MUNIN_URL='jdbc:h2:mem:test;MODE=MySQL'" >> /etc/profile.d/db.sh
-echo "export DB_MUNIN_USER=pepe" >> /etc/profile.d/db.sh
+echo "export DB_MUNIN_DRIVER=com.mysql.cj.jdbc.Driver" > /etc/profile.d/db.sh
+echo "export DB_MUNIN_URL=jdbc:mysql://mysql:3306/pepe" >> /etc/profile.d/db.sh
+echo "export DB_MUNIN_USER=root" >> /etc/profile.d/db.sh
 echo "export DB_MUNIN_PASSWORD=password" >> /etc/profile.d/db.sh
-echo "export DB_MUNIN_DDL=create" >> /etc/profile.d/db.sh
+echo "export DB_MUNIN_DDL=validate" >> /etc/profile.d/db.sh
+echo "export DB_MUNIN_DIALECT=org.hibernate.dialect.MySQL57InnoDBDialect" >> /etc/profile.d/db.sh
 source /etc/profile.d/db.sh
 
 # API
@@ -30,14 +31,14 @@ source /etc/profile.d/keystone.sh
 yum install -y /mnt/jdk/*.rpm
 yum install -y /mnt/dists/pepe-${SERVICE}-*el7.noarch.rpm
 
-# wait pepe-api 
+# wait pepe-api
 while ! echo > /dev/tcp/api/8080; do sleep 1; done
 
 # Add initial data
 curl -H'content-type: application/json' -d'{"name":"org.postgresql.Driver", "jar":"/tmp/postgresql-42.2.6.jar","type":"JDBC" }' ${PEPE_ENDPOINT}/munin/v1/driver
 curl -H'content-type: application/json' -d'{"name":"myconnection","url":"jdbc:postgresql://postgres:'${POSTGRES_PORT}'/'${POSTGRES_DB}'", "login":"'${POSTGRES_USER}'","password":"'${POSTGRES_PASSWORD}'", "driver":"http://localhost/driver/1" }' ${PEPE_ENDPOINT}/munin/v1/connection
 curl -H'content-type: application/json' -d'{"name": "'${KEYSTONE_PROJECT}'", "keystone":{"login":"'${KEYSTONE_USER}'", "password":"'${KEYSTONE_PASSWORD}'"}}' ${PEPE_ENDPOINT}/munin/v1/project
-curl -H'content-type: application/json' -d'{"name": "myquery", "query":"select 1", "connection":"http://localhost/connection/2", "project":"http://localhost/project/3"}' ${PEPE_ENDPOINT}/munin/v1/metric
+curl -H'content-type: application/json' -d'{"name": "myquery", "query":"select 1", "connection":"http://localhost/connection/1", "project":"http://localhost/project/1"}' ${PEPE_ENDPOINT}/munin/v1/metric
 
 # START
 

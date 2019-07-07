@@ -4,11 +4,12 @@ SERVICE=api
 
 # DB
 
-echo "export DB_API_DRIVER=org.h2.Driver" > /etc/profile.d/db.sh
-echo "export DB_API_URL='jdbc:h2:mem:test;MODE=MySQL'" >> /etc/profile.d/db.sh
-echo "export DB_API_USER=pepe" >> /etc/profile.d/db.sh
+echo "export DB_API_DRIVER=com.mysql.cj.jdbc.Driver" > /etc/profile.d/db.sh
+echo "export DB_API_URL=jdbc:mysql://mysql:3306/pepe" >> /etc/profile.d/db.sh
+echo "export DB_API_USER=root" >> /etc/profile.d/db.sh
 echo "export DB_API_PASSWORD=password" >> /etc/profile.d/db.sh
-echo "export DB_API_DDL=create" >> /etc/profile.d/db.sh
+echo "export DB_API_DDL=validate" >> /etc/profile.d/db.sh
+echo "export DB_API_DIALECT=org.hibernate.dialect.MySQL57InnoDBDialect" >> /etc/profile.d/db.sh
 source /etc/profile.d/db.sh
 
 # KEYSTONE
@@ -51,7 +52,7 @@ yum install -y /mnt/dists/pepe-${SERVICE}-*el7.noarch.rpm
 
 # Flyway
 export JAVA_HOME=/usr/lib/jvm/java
-cd /mnt && ./mnvw dependency:tree # TODO run Flyway
+cd /mnt && ./mnvw -Dflyway.user=${DB_API_USER} -Dflyway.password=${DB_API_PASSWORD} -Dflyway.url=${DB_API_URL} flyway:migrate
 
 # START
 
