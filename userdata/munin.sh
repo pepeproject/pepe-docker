@@ -5,7 +5,7 @@ SERVICE=munin
 # DB
 
 echo "export DB_MUNIN_DRIVER=com.mysql.cj.jdbc.Driver" > /etc/profile.d/db.sh
-echo "export DB_MUNIN_URL=jdbc:mysql://mysql:3306/pepe" >> /etc/profile.d/db.sh
+echo "export DB_MUNIN_URL='jdbc:mysql://mysql:3306/pepe?autoReconnect=true&useSSL=false'" >> /etc/profile.d/db.sh
 echo "export DB_MUNIN_USER=root" >> /etc/profile.d/db.sh
 echo "export DB_MUNIN_PASSWORD=password" >> /etc/profile.d/db.sh
 echo "export DB_MUNIN_DDL=none" >> /etc/profile.d/db.sh

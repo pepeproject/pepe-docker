@@ -5,7 +5,7 @@ SERVICE=api
 # DB
 
 echo "export DB_API_DRIVER=com.mysql.cj.jdbc.Driver" > /etc/profile.d/db.sh
-echo "export DB_API_URL=jdbc:mysql://mysql:3306/pepe" >> /etc/profile.d/db.sh
+echo "export DB_API_URL='jdbc:mysql://mysql:3306/pepe?autoReconnect=true&useSSL=false'" >> /etc/profile.d/db.sh
 echo "export DB_API_USER=root" >> /etc/profile.d/db.sh
 echo "export DB_API_PASSWORD=password" >> /etc/profile.d/db.sh
 echo "export DB_API_DDL=none" >> /etc/profile.d/db.sh
@@ -52,7 +52,7 @@ yum install -y /mnt/dists/pepe-${SERVICE}-*el7.noarch.rpm
 
 # Flyway
 export JAVA_HOME=/usr/lib/jvm/java
-cd /mnt && ./mnvw -Dflyway.user=${DB_API_USER} -Dflyway.password=${DB_API_PASSWORD} -Dflyway.url=${DB_API_URL} flyway:migrate
+cd /mnt && ./mvnw -Dflyway.user=${DB_API_USER} -Dflyway.password=${DB_API_PASSWORD} -Dflyway.url=${DB_API_URL} flyway:migrate
 
 # START
 
