@@ -8,7 +8,7 @@ echo "export DB_API_DRIVER=com.mysql.cj.jdbc.Driver" > /etc/profile.d/db.sh
 echo "export DB_API_URL=jdbc:mysql://mysql:3306/pepe" >> /etc/profile.d/db.sh
 echo "export DB_API_USER=root" >> /etc/profile.d/db.sh
 echo "export DB_API_PASSWORD=password" >> /etc/profile.d/db.sh
-echo "export DB_API_DDL=validate" >> /etc/profile.d/db.sh
+echo "export DB_API_DDL=none" >> /etc/profile.d/db.sh
 echo "export DB_API_DIALECT=org.hibernate.dialect.MySQL57InnoDBDialect" >> /etc/profile.d/db.sh
 source /etc/profile.d/db.sh
 

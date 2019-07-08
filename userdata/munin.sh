@@ -8,7 +8,7 @@ echo "export DB_MUNIN_DRIVER=com.mysql.cj.jdbc.Driver" > /etc/profile.d/db.sh
 echo "export DB_MUNIN_URL=jdbc:mysql://mysql:3306/pepe" >> /etc/profile.d/db.sh
 echo "export DB_MUNIN_USER=root" >> /etc/profile.d/db.sh
 echo "export DB_MUNIN_PASSWORD=password" >> /etc/profile.d/db.sh
-echo "export DB_MUNIN_DDL=validate" >> /etc/profile.d/db.sh
+echo "export DB_MUNIN_DDL=none" >> /etc/profile.d/db.sh
 echo "export DB_MUNIN_DIALECT=org.hibernate.dialect.MySQL57InnoDBDialect" >> /etc/profile.d/db.sh
 source /etc/profile.d/db.sh
 
