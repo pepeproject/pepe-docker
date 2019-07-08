@@ -38,7 +38,7 @@ while ! echo > /dev/tcp/api/8080; do sleep 1; done
 curl -H'content-type: application/json' -d'{"name":"org.postgresql.Driver", "jar":"/tmp/postgresql-42.2.6.jar","type":"JDBC" }' ${PEPE_ENDPOINT}/munin/v1/driver
 curl -H'content-type: application/json' -d'{"name":"myconnection","url":"jdbc:postgresql://postgres:'${POSTGRES_PORT}'/'${POSTGRES_DB}'", "login":"'${POSTGRES_USER}'","password":"'${POSTGRES_PASSWORD}'", "driver":"http://localhost/driver/1" }' ${PEPE_ENDPOINT}/munin/v1/connection
 curl -H'content-type: application/json' -d'{"name": "'${KEYSTONE_PROJECT}'", "keystone":{"login":"'${KEYSTONE_USER}'", "password":"'${KEYSTONE_PASSWORD}'"}}' ${PEPE_ENDPOINT}/munin/v1/project
-curl -H'content-type: application/json' -d'{"name": "myquery", "query":"select 1", "connection":"http://localhost/connection/1", "project":"http://localhost/project/1"}' ${PEPE_ENDPOINT}/munin/v1/metric
+curl -H'content-type: application/json' -d'{"name": "myquery", "query":"select 1", "trigger":"acs-collector", "connection":"http://localhost/connection/1", "project":"http://localhost/project/1"}' ${PEPE_ENDPOINT}/munin/v1/metric
 
 # START
 
