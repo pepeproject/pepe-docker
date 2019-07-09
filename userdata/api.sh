@@ -40,9 +40,9 @@ while :; do
     [ ${count} -ge ${limit} ] && break
 done
 echo "export STACKSTORM_KEY=$APIKEY" > /etc/profile.d/stackstorm.sh
-echo "export STACKSTORM_API_URL=https://stackstorm" >> /etc/profile.d/stackstorm.sh
-echo "export STACKSTORM_AUTH_URL=https://stackstorm" >> /etc/profile.d/stackstorm.sh
-echo "export STACKSTORM_STREAM_URL=https://stackstorm" >> /etc/profile.d/stackstorm.sh
+echo "export STACKSTORM_API_URL=https://stackstorm/api/v1" >> /etc/profile.d/stackstorm.sh
+echo "export STACKSTORM_AUTH_URL=https://stackstorm/auth/v1" >> /etc/profile.d/stackstorm.sh
+echo "export STACKSTORM_STREAM_URL=https://stackstorm/stream/v1" >> /etc/profile.d/stackstorm.sh
 source /etc/profile.d/stackstorm.sh
 
 # RPM
