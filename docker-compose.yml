@@ -6,6 +6,7 @@ services:
     image: tuxmonteiro/ucentos:7
     env_file:
       - st2/conf/postgres.env
+      - st2/conf/stackstorm.env
     ports:
       - "8002:8080"
     depends_on:
