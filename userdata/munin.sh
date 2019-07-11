@@ -41,6 +41,11 @@ curl -s -u ${ST2_USER}:${ST2_TOKEN} -H'content-type: application/json' -d'{"name
 curl -s -u ${ST2_USER}:${ST2_TOKEN} -H'content-type: application/json' -d'{"name": "'${KEYSTONE_PROJECT}'", "keystone":{"login":"'${KEYSTONE_USER}'", "password":"'${KEYSTONE_PASSWORD}'"}}' ${PEPE_ENDPOINT}/munin/v1/project
 curl -s -u ${ST2_USER}:${ST2_TOKEN} -H'content-type: application/json' -d'{"name": "myquery", "query":"select 1", "trigger":"acs-collector", "connection":"http://localhost/connection/1", "project":"http://localhost/project/1"}' ${PEPE_ENDPOINT}/munin/v1/metric
 
+# SHOW DATA
+
+curl -s -u ${ST2_USER}:${ST2_TOKEN} ${PEPE_ENDPOINT}'/munin/v1/metric?projection=recursive'
+curl -s -u ${ST2_USER}:${ST2_TOKEN} ${PEPE_ENDPOINT}'/munin/v1/metric/1?projection=recursive'
+
 # START
 
 PID_FILE="/opt/logs/pepe/${SERVICE}/pepe.pid"
@@ -59,6 +64,7 @@ source /opt/pepe/${SERVICE}/scripts/pepe.sh || true; \
   -Dcom.sun.management.jmxremote.ssl=false \
   -Dcom.sun.management.jmxremote=true \
   -Dlogging.config=/mnt/src/main/resources/log4j2.xml \
+  -Dorg.apache.activemq.SERIALIZABLE_PACKAGES=* \
   -DLog4jContextSelector=org.apache.logging.log4j.core.async.AsyncLoggerContextSelector \
   ${JAVA_VMS} \
   ${JAVA_VMX} \
