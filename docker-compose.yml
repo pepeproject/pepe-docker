@@ -153,7 +153,6 @@ services:
     dns_search: .
   mysql:
     image: mysql:5.7
-    container_name: mysql
     environment:
       MYSQL_ROOT_PASSWORD: password
       MYSQL_DATABASE: pepe
@@ -164,6 +163,17 @@ services:
     networks:
       - private
     dns_search: .
+  nginx:
+    image: centos:7
+    networks:
+      - private
+    dns_search: .
+    ports:
+      - "8000:80"
+    volumes:
+      - ./userdata/nginx.sh:/mnt/start.sh
+      - ./drivers/postgresql-42.2.6.jar:/mnt/postgresql-42.2.6.jar
+    command: /mnt/start.sh
 
 volumes:
   mysql-volume:
