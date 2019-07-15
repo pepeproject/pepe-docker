@@ -36,7 +36,7 @@ while ! echo > /dev/tcp/api/8080; do sleep 1; done
 
 # Add initial data
 ST2_TOKEN="$(curl -sk -u ${ST2_USER}:${ST2_PASSWORD} --data-binary '{}' https://stackstorm/auth/v1/tokens | python -c 'import sys, json; print json.load(sys.stdin)["token"]')"
-curl -s -u ${ST2_USER}:${ST2_TOKEN} -H'content-type: application/json' -d'{"name":"org.postgresql.Driver", "alias":"postgresql", "jar":"/tmp/postgresql-42.2.6.jar","type":"JDBC" }' ${PEPE_ENDPOINT}/munin/v1/driver
+curl -s -u ${ST2_USER}:${ST2_TOKEN} -H'content-type: application/json' -d'{"name":"org.postgresql.Driver", "alias":"postgresql", "jar":"http://nginx/postgresql-42.2.6.jar","type":"JDBC" }' ${PEPE_ENDPOINT}/munin/v1/driver
 curl -s -u ${ST2_USER}:${ST2_TOKEN} -H'content-type: application/json' -d'{"name":"myconnection","url":"jdbc:postgresql://postgres:'${POSTGRES_PORT}'/'${POSTGRES_DB}'", "login":"'${POSTGRES_USER}'","password":"'${POSTGRES_PASSWORD}'", "driver":"http://localhost/driver/1" }' ${PEPE_ENDPOINT}/munin/v1/connection
 curl -s -u ${ST2_USER}:${ST2_TOKEN} -H'content-type: application/json' -d'{"name": "'${KEYSTONE_PROJECT}'", "keystone":{"login":"'${KEYSTONE_USER}'", "password":"'${KEYSTONE_PASSWORD}'"}}' ${PEPE_ENDPOINT}/munin/v1/project
 curl -s -u ${ST2_USER}:${ST2_TOKEN} -H'content-type: application/json' -d'{"name": "myquery", "query":"select 1", "trigger":"acs-collector", "connection":"http://localhost/connection/1", "project":"http://localhost/project/1"}' ${PEPE_ENDPOINT}/munin/v1/metric
