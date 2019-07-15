@@ -169,7 +169,7 @@ services:
       - private
     dns_search: .
     ports:
-      - "8000:80"
+      - "8010:80"
     volumes:
       - ./userdata/nginx.sh:/mnt/start.sh
       - ./drivers/postgresql-42.2.6.jar:/mnt/postgresql-42.2.6.jar
